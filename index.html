@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Free First Name Generator</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background: #0f172a;
+  color: #e5e7eb;
+  margin: 0;
+  padding: 20px;
+}
+
+.container {
+  max-width: 900px;
+  margin: auto;
+  background: #020617;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 0 20px rgba(0,0,0,0.5);
+}
+
+h1 {
+  text-align: center;
+  color: #22c55e;
+}
+
+.controls {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+select, input, button {
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+  font-size: 16px;
+}
+
+select, input {
+  background: #020617;
+  color: #e5e7eb;
+  border: 1px solid #334155;
+}
+
+button {
+  background: #22c55e;
+  color: #022c22;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #16a34a;
+}
+
+#output {
+  white-space: pre-wrap;
+  background: #020617;
+  border: 1px solid #334155;
+  border-radius: 8px;
+  padding: 10px;
+  height: 400px;
+  overflow-y: auto;
+  margin-top: 15px;
+}
+</style>
+</head>
+
+<body>
+<div class="container">
+<h1>First Name Generator</h1>
+
+<div class="controls">
+  <select id="nationality">
+    <option value="filipino" selected>Filipino</option>
+    <option value="american">American</option>
+    <option value="japanese">Japanese</option>
+  </select>
+
+  <input type="number" id="count" min="1" max="1000" value="100">
+</div>
+
+<button onclick="generateNames()">Generate Names</button>
+
+<div id="output"></div>
+</div>
+
+<script>
+const NAMES = {
+  filipino: [
+    "Aiko","Angel","Anton","Arvin","Bea","Carlo","Cathy","Daniel","Ella",
+    "Enzo","Faith","Gabriel","Hazel","Ivan","Jade","Jay","Jessa","John",
+    "Joshua","Julia","Kevin","Kim","Lara","Liam","Luis","Mark","Mia",
+    "Miguel","Nina","Noah","Paolo","Rafa","Renz","Rico","Sam","Sean",
+    "Sophia","Theo","Tristan","Vanessa","Zoe"
+  ],
+  american: [
+    "Aaron","Abigail","Alex","Amanda","Andrew","Anna","Anthony","Ben",
+    "Brandon","Caleb","Chris","Daniel","David","Emily","Emma","Ethan",
+    "Grace","Hannah","Jack","James","Jessica","John","Jordan","Laura",
+    "Liam","Logan","Lucas","Mason","Michael","Natalie","Noah","Olivia",
+    "Ryan","Sarah","Sophia","Taylor","Tyler","William","Zoe"
+  ],
+  japanese: [
+    "Aiko","Akira","Aoi","Asuka","Daichi","Eri","Hana","Haruki","Hiro",
+    "Hinata","Itsuki","Kaede","Kaito","Kenji","Mai","Makoto","Mika",
+    "Minato","Naoki","Natsuki","Ren","Riku","Rin","Sakura","Sora",
+    "Takumi","Yuki","Yuna","Yuto"
+  ]
+};
+
+function generateNames() {
+  const nationality = document.getElementById("nationality").value;
+  const count = Math.min(
+    Math.max(parseInt(document.getElementById("count").value), 1),
+    1000
+  );
+
+  const list = NAMES[nationality];
+  let output = "";
+
+  for (let i = 1; i <= count; i++) {
+    const name = list[Math.floor(Math.random() * list.length)];
+    output += i + ". " + name + "\n";
+  }
+
+  document.getElementById("output").textContent = output;
+}
+</script>
+</body>
+</html>
