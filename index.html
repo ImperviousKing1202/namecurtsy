@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Free First Name Generator</title>
+<title>NameCurtsy – Unique First Name Generator</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
@@ -20,12 +20,13 @@ body {
   background: #020617;
   border-radius: 12px;
   padding: 20px;
-  box-shadow: 0 0 20px rgba(0,0,0,0.5);
+  box-shadow: 0 0 20px rgba(0,0,0,0.6);
 }
 
 h1 {
   text-align: center;
   color: #22c55e;
+  margin-bottom: 20px;
 }
 
 .controls {
@@ -74,25 +75,26 @@ button:hover {
 
 <body>
 <div class="container">
-<h1>First Name Generator</h1>
+<h1>NameCurtsy – Unique First Name Generator</h1>
 
 <div class="controls">
   <select id="nationality">
     <option value="filipino" selected>Filipino</option>
     <option value="american">American</option>
-    <option value="japanese">Japanese</option>
+    <option value="canadian">Canadian</option>
   </select>
 
   <input type="number" id="count" min="1" max="1000" value="100">
 </div>
 
-<button onclick="generateNames()">Generate Names</button>
+<button onclick="generateNames()">Generate Unique Names</button>
 
 <div id="output"></div>
 </div>
 
 <script>
-const NAMES = {
+// ================= BASE NAME DATA =================
+const BASE_NAMES = {
   filipino: [
     "Aiko","Angel","Anton","Arvin","Bea","Carlo","Cathy","Daniel","Ella",
     "Enzo","Faith","Gabriel","Hazel","Ivan","Jade","Jay","Jessa","John",
@@ -107,28 +109,51 @@ const NAMES = {
     "Liam","Logan","Lucas","Mason","Michael","Natalie","Noah","Olivia",
     "Ryan","Sarah","Sophia","Taylor","Tyler","William","Zoe"
   ],
-  japanese: [
-    "Aiko","Akira","Aoi","Asuka","Daichi","Eri","Hana","Haruki","Hiro",
-    "Hinata","Itsuki","Kaede","Kaito","Kenji","Mai","Makoto","Mika",
-    "Minato","Naoki","Natsuki","Ren","Riku","Rin","Sakura","Sora",
-    "Takumi","Yuki","Yuna","Yuto"
+  canadian: [
+    "Aaron","Abigail","Adam","Alex","Amanda","Andrew","Anna","Benjamin",
+    "Brandon","Caleb","Charlotte","Chloe","Daniel","David","Emma","Ethan",
+    "Grace","Hannah","Jack","Jacob","James","Jessica","John","Jordan",
+    "Joshua","Julia","Liam","Logan","Lucas","Madison","Matthew","Michael",
+    "Nathan","Noah","Olivia","Ryan","Sarah","Sophia","Thomas","William",
+    "Zoe"
   ]
 };
 
+// ================= MODIFIERS =================
+const PREFIXES = ["", "Al", "El", "Ka", "La", "Mi", "Ra", "Sa"];
+const SUFFIXES = ["", "a", "i", "o", "an", "en", "yn", "elle", "son"];
+
+// ================= UNIQUE GENERATOR =================
+function generateUniqueNames(baseNames, count) {
+  const results = new Set();
+
+  for (const prefix of PREFIXES) {
+    for (const name of baseNames) {
+      for (const suffix of SUFFIXES) {
+        if (results.size >= count) return Array.from(results);
+        results.add(prefix + name + suffix);
+      }
+    }
+  }
+
+  return Array.from(results);
+}
+
+// ================= MAIN FUNCTION =================
 function generateNames() {
   const nationality = document.getElementById("nationality").value;
-  const count = Math.min(
-    Math.max(parseInt(document.getElementById("count").value), 1),
-    1000
-  );
+  let count = parseInt(document.getElementById("count").value);
 
-  const list = NAMES[nationality];
+  if (isNaN(count) || count < 1) count = 1;
+  if (count > 1000) count = 1000;
+
+  const baseList = BASE_NAMES[nationality];
+  const names = generateUniqueNames(baseList, count);
+
   let output = "";
-
-  for (let i = 1; i <= count; i++) {
-    const name = list[Math.floor(Math.random() * list.length)];
-    output += i + ". " + name + "\n";
-  }
+  names.forEach((name, index) => {
+    output += `${index + 1}. ${name}\n`;
+  });
 
   document.getElementById("output").textContent = output;
 }
